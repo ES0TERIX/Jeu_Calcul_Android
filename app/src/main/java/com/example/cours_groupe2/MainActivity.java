@@ -4,14 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button boutonCalcul;
 
-    private Button boutonDernierCalcul;
+    private Button boutonHighscore;
+
+    private Button boutonApropos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +24,17 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        boutonDernierCalcul= findViewById(R.id.boutonDernierCalcul);
-        boutonDernierCalcul.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this,LastActivity.class);
+        boutonHighscore = findViewById(R.id.boutonHighScore);
+        boutonHighscore.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, HighScoreActivity.class);
             startActivity(intent);
         });
+
+        boutonApropos = findViewById(R.id.butonApropos);
+        boutonApropos.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this,aPropos.class);
+            startActivity(intent);
+        });
+
     }
 }

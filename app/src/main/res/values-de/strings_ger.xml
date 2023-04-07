@@ -7,6 +7,19 @@
     <string name="ERROR_NUMBER_TOO_HIGH"> Le nombre est trop grand en allemand</string>
     <string name="TOOLBAR_CALCUL">FAIS LE CALCUL !</string>
     <string name="MALFORMED_CALCUL"> Calcul malformé en allemand</string>
+    <string name="text_bouton_delete">PURIFIER</string>
+    <string name="text_bouton_valider">KonKluant</string>
+    <string name="item_health">artung:</string>
+    <string name="item_score">saucisse:</string>
+    <string name="text_bouton_apropos">A Propos</string>
+    <string name="bouton_nom">ENREGISTRER EN ALLEMAND</string>
+    <string name="text_view_createur">Groupir :</string>
+    <string name="text_view_highscore">Highscoren</string>
+    <string name="text_view_score">Scoren</string>
+    <string name="text_view_name">ich bin ?</string>
+    <string name="textView_Nom">X</string>
+    <string name="textView_HighScore">X</string>
+
 
 
 

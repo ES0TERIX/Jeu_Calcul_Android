@@ -2,10 +2,11 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/toolbar_clear"
-        android:title="@string/toolbar_clear" />
+        android:id="@+id/item_score"
+        android:title="@string/item_score"
+        app:showAsAction="always" />
     <item
-        android:id="@+id/toolbar_calcul"
-        android:title="@string/TOOLBAR_CALCUL"
+        android:id="@+id/item_health"
+        android:title="@string/item_health"
         app:showAsAction="always" />
 </menu>

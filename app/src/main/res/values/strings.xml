@@ -1,7 +1,12 @@
 <resources>
-    <string name="app_name" translatable="false">cours_groupe2</string>
-    <string name="text_bouton_calcul">Calcul</string>
-    <string name="text_bouton_dernier_calcul">Dernier Calcul</string>
+    <string name="app_name" translatable="false">Jeu Calcul</string>
+    <string name="text_view_createur">Groupe :</string>
+    <string name="text_view_highscore">Highscore</string>
+    <string name="text_view_name">Name</string>
+    <string name="text_view_score">Score</string>
+    <string name="text_bouton_calcul">Jeu</string>
+    <string name="text_bouton_apropos">A Propos</string>
+    <string name="text_bouton_dernier_calcul">HighScore</string>
     <string name="text_bouton_0" translatable="false">0</string>
     <string name="text_bouton_1" translatable="false">1</string>
     <string name="text_bouton_2" translatable="false">2</string>
@@ -16,10 +21,18 @@
     <string name="text_bouton_substract" translatable="false">-</string>
     <string name="text_bouton_multiply" translatable="false">x</string>
     <string name="text_bouton_divide" translatable="false">/</string>
+    <string name="text_bouton_delete">Supprimer</string>
+    <string name="text_bouton_valider">Valider</string>
     <string name="toolbar_clear">Nettoyer</string>
+    <string name="item_health">Health:</string>
+    <string name="item_score">Score:</string>
     <string name="ERROR_ALREADY_HAVE_CALCUL_TYPE"> Il ne peut y avoir qu\'un seul type de calcul</string>
     <string name="ERROR_NUMBER_TOO_HIGH"> Le nombre est trop grand</string>
     <string name="TOOLBAR_CALCUL">FAIS LE CALCUL !</string>
     <string name="MALFORMED_CALCUL"> Calcul malformé</string>
+    <string name="bouton_nom">Enregistrer</string>
+    <string name="textView_Nom">X</string>
+    <string name="textView_HighScore">X</string>
+
 
 </resources>

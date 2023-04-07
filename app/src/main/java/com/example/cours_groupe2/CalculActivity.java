@@ -1,23 +1,26 @@
 package com.example.cours_groupe2;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cours_groupe2.DAO.CalculBaseHelper;
-import com.example.cours_groupe2.DAO.CalculDao;
-import com.example.cours_groupe2.model.entities.Calcul;
+
+import com.example.cours_groupe2.DAO.ScoreBaseHelper;
+import com.example.cours_groupe2.DAO.ScoreDao;
+import com.example.cours_groupe2.model.entities.Score;
+
+import java.util.Random;
 
 public class CalculActivity extends AppCompatActivity {
     private TextView textViewCalcul;
+    private String nom = "XXX";
+    private TextView textViewProbleme;
     private Button boutonPlus;
     private Button boutonDivide;
     private Button boutonSubstract;
@@ -33,20 +36,31 @@ public class CalculActivity extends AppCompatActivity {
     private Button bouton9;
     private Button bouton0;
 
+    private Button boutonDelete;
+    private Button boutonValider;
+
     private Integer premierTerme = 0;
     private Integer deuxiemeTerme = 0;
     private TypeOperationEnum typeOperation;
+    private ScoreDao calculDao;
+    private Integer reponse = 0;
+    private Integer resultat = 0;
 
-    private CalculDao calculDao;
+    private Integer score = 0;
 
-    private String calcul = "";
+    private Integer health = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calcul);
-        calculDao= new CalculDao(new CalculBaseHelper(this,"BDD",1));
+        calculDao= new ScoreDao(new ScoreBaseHelper(this,"BDD",1));
+
+        genererCalcul();
+
         textViewCalcul = findViewById(R.id.textViewCalcul);
+        textViewProbleme = findViewById(R.id.textViewProbleme);
+
         boutonDivide = findViewById(R.id.button_divide);
         boutonDivide.setOnClickListener(view -> {
             ajouterSymbole(TypeOperationEnum.DIVIDE);
@@ -103,7 +117,19 @@ public class CalculActivity extends AppCompatActivity {
         boutonMultiply.setOnClickListener(view -> {
             ajouterSymbole(TypeOperationEnum.MULTIPLY);
         });
+        boutonDelete = findViewById(R.id.buttonDelete);
+        boutonDelete.setOnClickListener(view -> {
+            reponse = retirerDernier(reponse);
+            majTextView();
+        });
+        boutonValider = findViewById(R.id.button_valider);
+        boutonValider.setOnClickListener(view -> {
+            verifier();
+        });
 
+    }
+    public int retirerDernier(int number) {
+        return number / 10;
     }
 
     private void ajouterSymbole(TypeOperationEnum typeOperation) {
@@ -114,96 +140,87 @@ public class CalculActivity extends AppCompatActivity {
             majTextView();
         }
     }
+    private void genererCalcul(){
+        textViewProbleme= findViewById(R.id.textViewProbleme);
+        Random random = new Random();
+        premierTerme = random.nextInt(999);
+        premierTerme += 1;
+        deuxiemeTerme = random.nextInt(999);
+        deuxiemeTerme += 1;
+        String symbole = "";
+        int operateur = random.nextInt(4);
+        switch (operateur){
+            case 0:
+                resultat = premierTerme+deuxiemeTerme;
+                symbole = "+";
+                break;
+            case 1:
+                resultat = premierTerme-deuxiemeTerme;
+                symbole = "-";
+                break;
+            case 2:
+                resultat = premierTerme*deuxiemeTerme;
+                symbole = "*";
+                break;
+            case 3:
+                deuxiemeTerme = 2;
+                resultat = premierTerme/deuxiemeTerme;
+                symbole = "/";
+                break;
+        }
+        textViewProbleme.setText(premierTerme + symbole + deuxiemeTerme+ " = "+ resultat);
+    }
 
     private void ajouterChiffre(Integer chiffre) {
-        if (this.typeOperation == null) {
-            if (premierTerme <= 9999) {
-                premierTerme = 10 * premierTerme + chiffre;
-                majTextView();
-            } else {
-                Toast.makeText(this, getString(R.string.ERROR_NUMBER_TOO_HIGH), Toast.LENGTH_LONG).show();
-            }
+        if (reponse <= 9999999) {
+            reponse = 10 * reponse + chiffre;
+            majTextView();
         } else {
-            if (deuxiemeTerme <= 9999) {
-                deuxiemeTerme = 10 * deuxiemeTerme + chiffre;
-                majTextView();
-            } else {
-                Toast.makeText(this, getString(R.string.ERROR_NUMBER_TOO_HIGH), Toast.LENGTH_LONG).show();
-            }
+            Toast.makeText(this, getString(R.string.ERROR_NUMBER_TOO_HIGH), Toast.LENGTH_LONG).show();
         }
     }
 
     private void majTextView() {
-        if (typeOperation == null) {
-            textViewCalcul.setText("" + premierTerme);
-        } else {
-            textViewCalcul.setText(premierTerme + typeOperation.getSymbole() + deuxiemeTerme);
-        }
-    }
-
-    private void ajouteCharactere(String character) {
-        calcul += character;
-        textViewCalcul.setText(calcul);
+        textViewCalcul.setText("" + reponse);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.toolbar, menu);
-        MenuItem boutonNettoyer = menu.findItem(R.id.toolbar_clear);
-        boutonNettoyer.setOnMenuItemClickListener(view -> {
-            textViewCalcul.setText("");
-            calcul = "";
-            this.typeOperation = null;
-            return true;
-        });
-
-        MenuItem boutonCalcul = menu.findItem(R.id.toolbar_calcul);
-        boutonCalcul.setOnMenuItemClickListener(view -> {
-            return faisLeCalcul();
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    private boolean faisLeCalcul() {
-        Integer resultat=0;
-        if(verifieLeCalcul()){
-            switch (typeOperation){
-                case ADD:
-                    resultat =premierTerme+deuxiemeTerme;
-                    break;
-                case SUBSTRACT:
-                    resultat = premierTerme-deuxiemeTerme;
-                    break;
-                case DIVIDE:
-                    resultat = premierTerme/deuxiemeTerme;
-                    break;
-                case MULTIPLY:
-                    resultat= premierTerme*deuxiemeTerme;
-            }
-            Calcul monCalcul = new Calcul();
-            monCalcul.setPremierElement(premierTerme);
-            monCalcul.setDeuxiemeElement(deuxiemeTerme);
-            monCalcul.setResultat(resultat);
-            monCalcul.setSymbole(typeOperation.getSymbole());
-            calculDao.create(monCalcul);
-            Intent intent = new Intent(this,ResulstatActivity.class);
-            intent.putExtra("PREMIER_TERME",premierTerme);
-            intent.putExtra("symbol",typeOperation.getSymbole());
-            intent.putExtra("DEUXIEME_TERME",deuxiemeTerme);
-            intent.putExtra("RESULTAT",resultat);
-            startActivity(intent);
-        }
+        getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
 
-    private boolean verifieLeCalcul() {
-        if ((premierTerme == 0 || deuxiemeTerme == 0 || typeOperation == null)) {
-            Toast.makeText(this, getString(R.string.MALFORMED_CALCUL), Toast.LENGTH_LONG).show();
-            return false;
-        } else {
-            return true;
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItemHealth = menu.findItem(R.id.item_health);
+        MenuItem menuItemScore = menu.findItem(R.id.item_score);
+        String titlehealth = getString(R.string.item_health) + " " + health;
+        String titlescore = getString(R.string.item_score) + " " + score;
+
+        menuItemHealth.setTitle(titlehealth);
+        menuItemScore.setTitle(titlescore);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void verifier(){
+        if (resultat.equals(reponse)) {
+            score += 1;
+            genererCalcul();
+            invalidateOptionsMenu();
+            reponse = 0;
+            majTextView();
+        }else{
+            health -= 1;
+            invalidateOptionsMenu();
+            if (health.equals(0)){
+                Score monScore = new Score();
+                monScore.setScore(score);
+                monScore.setNom(nom);
+                Intent intent = new Intent(CalculActivity.this, NameActivity.class);
+                intent.putExtra("SCORE", score);
+                intent.putExtra("NOM", nom);
+                startActivity(intent);
+            }
         }
     }
 }
